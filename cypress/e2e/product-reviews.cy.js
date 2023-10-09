@@ -6,7 +6,7 @@ describe('product reviews', () => {
     cy.get('.primary').click();
   });
   // Remove .only and implement others test cases!
-  it.only('changing rating of specify product review', () => {
+  it('changing rating of specify product review', () => {
     // Click in product reviews in side menu
     cy.clickInFirst('a[href="/admin/product-reviews/"]');
     // Type in value input to search for specify product review
@@ -25,10 +25,38 @@ describe('product reviews', () => {
   });
   it('test case 2', () => {
     // Implement your test case 2 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
   });
   it('test case 3', () => {
     // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
   });
-
-  // Implement the remaining test cases in a similar manner
+  it('test case 4', () => {
+    // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
+  });
+  it('test case 5', () => {
+    // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
+  });
+  it('test case 6', () => {
+    // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
+  });
+  it('test case 7', () => {
+    // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
+  });
+  it('test case 8', () => {
+    // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
+  });
+  it('test case 9', () => {
+    // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
+  });
+  it('test case 10', () => {
+    // Implement your test case 3 code here
+    cy.clickInFirst('a[href="/admin/product-reviews/"]');
+  });
 });
