@@ -15,6 +15,7 @@ describe('product reviews', () => {
 
   beforeEach(async () => {
     driver.manage().deleteAllCookies();
+    await driver.manage().setTimeouts({ implicit: 2000 });
     await driver.get('http://localhost:9990/admin');
     // await driver.get('http://150.165.75.99:9990/admin');
     await driver.findElement(By.id('_username')).sendKeys('sylius');
@@ -91,7 +92,10 @@ describe('product reviews', () => {
 
     await driver.findElement(By.id('criteria_title_value')).sendKeys('consequatur quis tempore');
 
-    await driver.findElement(By.css('*[class^="ui red labeled icon button"]')).click();
+    const deleteButtons = await driver.findElements(By.css('*[class^="ui red labeled icon button"]'));
+    deleteButtons[deleteButtons.length - 1].click()
+
+    // await driver.findElement(By.css('*[class^="ui red labeled icon button"]')).click();
 
     await driver.findElement(By.id('confirmation-button')).click();
 
@@ -101,13 +105,13 @@ describe('product reviews', () => {
 
   it('test case 5', async () => {
     await driver.findElement(By.linkText('Product reviews')).click();
-    await driver.findElement(By.linkText('50')).click();
+    const button = await driver.findElement(By.css('a[href="/admin/product-reviews/?limit=50"]'));
+
+    button.click()
 
     const deleteButtons = await driver.findElements(By.css('*[class^="ui red labeled icon button"]'));
     
     deleteButtons[deleteButtons.length - 1].click();
-
-    await driver.findElement(By.css('*[class^="ui red labeled icon button"]')).click();
 
     await driver.findElement(By.id('confirmation-button')).click();
 
@@ -116,41 +120,46 @@ describe('product reviews', () => {
     assert(!bodyText.includes('similique eum nulla'));
   });
 
-  // it('test case 6', async () => {
-  //   await driver.findElement(By.linkText('Product reviews')).click();
+  it('test case 6', async () => {
+    await driver.findElement(By.linkText('Product reviews')).click();
 
-  //   const select = await driver.findElement(By.id('criteria_title_type'));
-  //   const selection = new Select(select);
+    const checkbox = await driver.findElement(By.css('*[data-js-bulk-checkboxes=".bulk-select-checkbox"]'));
+    checkbox.click();
 
-  //   selection.selectByVisibleText('Equal');
+    const deleteButtons = await driver.findElements(By.css('*[class^="ui red labeled icon button"]'));
+    deleteButtons[0].click();
 
-  //   await driver.findElement(By.id('criteria_title_value')).sendKeys('consequatur quis tempore');
+    await driver.findElement(By.id('confirmation-button')).click();
 
-  //   await driver.findElement(By.css('*[class^="ui red labeled icon button"]')).click();
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Product_reviews have been successfully deleted.'));
+  });
 
-  //   await driver.findElement(By.id('confirmation-button')).click();
+  it('test case 7', async () => {
+    await driver.findElement(By.linkText('Product reviews')).click();
 
-  //   const bodyText = await driver.findElement(By.tagName('body')).getText();
-  //   assert(bodyText.includes('Product review has been successfully deleted.'));
-  // });
+    const select = await driver.findElement(By.id('criteria_title_type'));
+    const selection = new Select(select);
 
-  // it('test case 7', async () => {
-  //   await driver.findElement(By.linkText('Product reviews')).click();
+    selection.selectByVisibleText('Equal');
 
-  //   const select = await driver.findElement(By.id('criteria_title_type'));
-  //   const selection = new Select(select);
+    const textField = await driver.findElement(By.id('criteria_title_value'));
+    textField.sendKeys('iste non impedit');
 
-  //   selection.selectByVisibleText('Equal');
+    const editButton = await driver.findElement(By.css('*[class^="ui labeled icon button "]'));
+    editButton.click();
 
-  //   await driver.findElement(By.id('criteria_title_value')).sendKeys('consequatur quis tempore');
+    const titleField = await driver.findElement(By.css('*[value*="occaecati minima quis"]'));
+    titleField.clear();
+    titleField.sendKeys('Novus titulus');
 
-  //   await driver.findElement(By.css('*[class^="ui red labeled icon button"]')).click();
+     // Click on Save changes button
+     await driver.findElement(By.id('sylius_save_changes_button')).click();
 
-  //   await driver.findElement(By.id('confirmation-button')).click();
-
-  //   const bodyText = await driver.findElement(By.tagName('body')).getText();
-  //   assert(bodyText.includes('Product review has been successfully deleted.'));
-  // });
+     // Assert that product review has been updated
+     const bodyText = await driver.findElement(By.tagName('body')).getText();
+     assert(bodyText.includes('Product review has been successfully updated.'));
+  });
 
   // it('test case 8', async () => {
   //   await driver.findElement(By.linkText('Product reviews')).click();
@@ -188,22 +197,33 @@ describe('product reviews', () => {
   //   assert(bodyText.includes('Product review has been successfully deleted.'));
   // });
 
-  // it('test case 10', async () => {
-  //   await driver.findElement(By.linkText('Product reviews')).click();
+  it.only('test case 10', async () => {
+    await driver.findElement(By.linkText('Product reviews')).click();
 
-  //   const select = await driver.findElement(By.id('criteria_title_type'));
-  //   const selection = new Select(select);
+    const select = await driver.findElement(By.id('criteria_title_type'));
+    const selection = new Select(select);
 
-  //   selection.selectByVisibleText('Equal');
+    selection.selectByVisibleText('Equal');
 
-  //   await driver.findElement(By.id('criteria_title_value')).sendKeys('consequatur quis tempore');
+    const textField = await driver.findElement(By.id('criteria_title_value'));
+    textField.sendKeys('magnam ut sed');
 
-  //   await driver.findElement(By.css('*[class^="ui red labeled icon button"]')).click();
+    const editButton = await driver.findElement(By.css('*[class^="ui labeled icon button "]'));
+    editButton.click();
 
-  //   await driver.findElement(By.id('confirmation-button')).click();
+    let titleField = await driver.findElement(By.css('*[id*="sylius_product_review_comment"]'));
+    // await driver.findElement(By.css('*[id*="sylius_product_review_comment"]')).clear()
+    // await driver.findElement(By.css('*[id*="sylius_product_review_comment"]')).sendKeys('Comentarius deletium');
+    await
+    titleField.clear();
+    titleField.sendKeys('Comentarius deletium');
 
-  //   const bodyText = await driver.findElement(By.tagName('body')).getText();
-  //   assert(bodyText.includes('Product review has been successfully deleted.'));
-  // });
+     // Click on Save changes button
+     await driver.findElement(By.id('sylius_save_changes_button')).click();
+
+     // Assert that product review has been updated
+     const bodyText = await driver.findElement(By.tagName('body')).getText();
+     assert(bodyText.includes('Product review has been successfully updated.'));
+  });
 
 });
